@@ -1,0 +1,45 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: kim6515516
+ * Date: 2022-09-12
+ * Time: 21:08
+ */
+
+namespace Tests\Unit\Services;
+
+
+use App\Services\BoardService;
+use Carbon\Carbon;
+use Tests\TestCase;
+
+class BoardServiceEventTest extends TestCase
+{
+    public function testEventBefore0911()
+    {
+        // Given
+        $now = Carbon::create(2022, 9, 1)->endOfDay();
+        Carbon::setTestNow($now);
+
+        // When
+        $service = new BoardService();
+        $value = $service->event();
+
+        // Then
+        $this->assertSame(10, $value);
+    }
+
+    public function testEventAfter0911()
+    {
+        // Given
+        $now = Carbon::create(2022, 9, 13)->endOfDay();
+        Carbon::setTestNow($now);
+
+        // When
+        $service = new BoardService();
+        $value = $service->event();
+
+        // Then
+        $this->assertSame(30, $value);
+    }
+}
