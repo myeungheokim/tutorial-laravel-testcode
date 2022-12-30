@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Requests\BoardStoreRequest;
 use App\Models\Board;
 use App\Services\BoardService;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class BoardController extends Controller
         return response()->json();
     }
 
-    public function store(Request $request)
+    public function store(BoardStoreRequest $request)
     {
 
         $this->boardService->store($request->all());

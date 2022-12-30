@@ -19,3 +19,4 @@ Route::get('/', function () {
 
 Route::get('/boards', [\App\Http\Controllers\BoardController::class, 'index']);
 Route::post('/boards', [\App\Http\Controllers\BoardController::class, 'store']);
+Route::delete('/boards/{id}', [\App\Http\Controllers\BoardController::class, 'destroy']);

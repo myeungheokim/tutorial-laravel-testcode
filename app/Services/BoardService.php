@@ -13,6 +13,7 @@ use App\Models\Board;
 use Carbon\Carbon;
 use http\Exception\RuntimeException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class BoardService
 {
@@ -38,6 +39,8 @@ class BoardService
     {
         if ($id < 0) {
             throw new ModelNotFoundException("test");
+        } else {
+            throw new ExpectationFailedException("test");
         }
     }
 

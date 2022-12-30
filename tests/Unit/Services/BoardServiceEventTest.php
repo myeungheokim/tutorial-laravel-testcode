@@ -20,6 +20,8 @@ class BoardServiceEventTest extends TestCase
     {
         // Given
         // 작성하시오
+        $now = Carbon::create(2022, 8, 13)->endOfDay();
+        Carbon::setTestNow($now);
 
         // When
         $service = new BoardService();
@@ -27,13 +29,15 @@ class BoardServiceEventTest extends TestCase
 
         // Then
         // 작성하시오
+        $this->assertSame(10, $value);
     }
 
     /** 09월 11일 이후부터 30을 리턴해야한다.  */
     public function testEventAfter0911()
     {
         // Given
-        // 작성하시오
+        $now = Carbon::create(2022, 10, 13)->endOfDay();
+        Carbon::setTestNow($now);
 
         // When
         $service = new BoardService();
@@ -41,6 +45,7 @@ class BoardServiceEventTest extends TestCase
 
         // Then
         // 작성하시오
+        $this->assertSame(30, $value);
     }
 
     // 힌트

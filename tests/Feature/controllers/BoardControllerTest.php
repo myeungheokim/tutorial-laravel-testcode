@@ -6,12 +6,13 @@
  * Time: 20:57
  */
 
-namespace Tests\Unit\controllers;
+namespace Tests\Feature\controllers;
 
 
 use App\Models\User;
 use App\Services\BoardService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\MockHelper;
 use Tests\TestCase;
 
 /**
@@ -59,6 +60,33 @@ class BoardControllerTest extends TestCase
     public function testStoreMockService()
     {
         // Given
+        $mockUser = MockHelper::mockUser();
+
+        $params = [
+            "title" => "postTitle",
+            "content" => "PostContent",
+            "user_id" => $mockUser->id
+        ];
+
+        $mockService = \Mockery::mock(BoardService::class);
+        $mockService->shouldReceive('store')
+            ->andReturn([]);
+
+        $this->app->instance(BoardService::class, $mockService);
+
+        // When
+        $response = $this->json('POST', "/boards", $params);
+
+        // Then
+        $response->assertStatus(201);
+        $this->assertSoftDeleted();
+//        $this->assertDatabaseHas('boards', ['title' => 'postTitle']);
+    }
+
+
+    public function testStoreValidationSuccess()
+    {
+        // Given
         $mockUser = User::create([
             'name' => 'mockUser',
             'email' => 'aaa@aaa.com',
@@ -82,58 +110,29 @@ class BoardControllerTest extends TestCase
 
         // Then
         $response->assertStatus(201);
-//        $this->assertDatabaseHas('boards', ['title' => 'postTitle']);
     }
+//
+    public function testStoreValidationFail()
+    {
+        // Given
+        $params = [
+            "title" => "postTitle",
+            "content" => "PostContent",
+//            "user_id" => 0
+        ];
 
+        $mockService = \Mockery::mock(BoardService::class);
 
-//    public function testStoreValidationSuccess()
-//    {
-//        // Given
-//        $mockUser = User::create([
-//            'name' => 'mockUser',
-//            'email' => 'aaa@aaa.com',
-//            'password' => 'password'
-//        ]);
-//
-//        $params = [
-//            "title" => "postTitle",
-//            "content" => "PostContent",
-//            "user_id" => $mockUser->id
-//        ];
-//
-//        $mockService = \Mockery::mock(BoardService::class);
-//        $mockService->shouldReceive('store')
-//            ->andReturn([]);
-//
-//        $this->app->instance(BoardService::class, $mockService);
-//
-//        // When
-//        $response = $this->json('POST', "/boards", $params);
-//
-//        // Then
-//        $response->assertStatus(201);
-//    }
-//
-//    public function testStoreValidationFail()
-//    {
-//        // Given
-//        $params = [
-//            "title" => "postTitle",
-//            "content" => "PostContent",
-////            "user_id" => 0
-//        ];
-//
-//        $mockService = \Mockery::mock(BoardService::class);
-//        $mockService->shouldReceive('store')
-//            ->andReturn([]);
-//
-//        $this->app->instance(BoardService::class, $mockService);
-//
-//        // When
-//        $response = $this->json('POST', "/boards", $params);
-//
-//        // Then
-//        $response->assertStatus(422);
-//    }
+        $mockService->shouldReceive('store')
+            ->andReturn([]);
+
+        $this->app->instance(BoardService::class, $mockService);
+
+        // When
+        $response = $this->json('POST', "/boards", $params);
+
+        // Then
+        $response->assertStatus(422);
+    }
 
 }

@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Services\BoardService;
 use http\Exception\RuntimeException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use PHPUnit\Framework\ExpectationFailedException;
 use Tests\TestCase;
 
 /**
@@ -28,7 +29,7 @@ class BoardServiceExceptionTest extends TestCase
         $id = -1;
 
         // When && Then
-        $this->expectException(ModelNotFoundException::class);
+        $this->expectException(ModelNotFoundException::class); // ture , flase
         $service = new BoardService();
         $response = $service->checkException($id);
 
